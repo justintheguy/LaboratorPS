@@ -1,0 +1,39 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.io.wavfile as wav
+import scipy.signal as sg
+import sounddevice as sndv
+
+#1
+def x(t):
+    return 20 * np.sin(2.0 * np.pi * t + 1 )
+
+def y(t):
+    return  -20* np.cos(2.0*np.pi * (t + np.pi/2) - 1)
+
+def z(t, faz):
+    return np.sin(2 * np.pi * t + faz)
+
+def ex1(t):
+    fig, axs = plt.subplots(2)
+    axs[0].plot(t, x(t))
+    axs[1].plot(t, y(t))
+    plt.show()
+
+
+def ex2():
+    t = np.linspace(0,0.5,10)
+    faz = [1,2,4,5]
+    plt.plot(t,z(t, faz))
+    plt.show()
+
+
+
+
+
+
+
+if __name__  ==  '__main__':
+    k = np.linspace(0.0,0.2,10)
+    #ex1(k)
+    #ex2()
