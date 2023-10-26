@@ -2,14 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io.wavfile as wav
 import scipy.signal as sg
-import sounddevice as sndv
+import sounddevice as sd
 
 #1
 def x(t):
-    return 20 * np.sin(2.0 * np.pi * t + 1 )
+    return 2 * np.sin(2.0 * 50 * np.pi * t + np.pi/3 + np.pi/2)
 
 def y(t):
-    return  -20* np.cos(2.0*np.pi * (t + np.pi/2) - 1)
+    return  2 * np.cos(2.0* 50 * np.pi * t + np.pi/3)
 
 def z(t, faz):
     return np.sin(2 * np.pi * t + faz)
@@ -21,19 +21,152 @@ def ex1(t):
     plt.show()
 
 
-def ex2():
-    t = np.linspace(0,0.5,10)
-    faz = [1,2,4,5]
-    plt.plot(t,z(t, faz))
+def dfunc1(t, fz):
+    return 4 * np.sin(176 * np.pi * t + fz)
+
+
+def func_normalizare(x):
+    n = np.linalg.norm(x)
+    if n == 0:
+       return x
+    return x / n
+
+
+def ex2(k):
+
+    plt.plot(k, dfunc1(k, np.pi/8), color = "black")
+    plt.plot(k, dfunc1(k, np.pi / 4), color="red")
+    plt.plot(k, dfunc1(k, np.pi / 2), color="blue")
+    plt.plot(k, dfunc1(k, np.pi), color="orange")
+    plt.plot()
+    plt.show()
+
+    vect = np.zeros(len(k))
+
+
+    for i in range(len(vect)):
+        vect[i] = dfunc1(k[i], np.pi/2)
+
+    z = np.random.normal(0, 0.5, len(k))
+    snr = 10
+    gama = np.sqrt(np.power(func_normalizare(vect), 2) /
+                   (np.power(func_normalizare(z), 2) * snr))
+    fin = vect + gama * z
+
+    plt.plot(k, fin)
+    plt.show()
+
+def func1(t):
+    return 2 * np.sin(800 * np.pi * t + np.pi / 2)
+
+def func2(t):
+    return 2 * np.sin(1600 * np.pi * t + np.pi / 2)
+
+def func3(t):
+    return t%3
+
+def func4(t):
+    return np.sign(np.cos(t))
+
+def ex2_a_rez():
+    k = np.linspace(0, 3, 1200)
+    plt.plot(k, func1(k))
+    plt.show()
+
+def ex2_b_rez():
+    k = np.linspace(0, 3, 2400)
+    plt.plot(k, func2(k))
+    k_nou = np.linspace(0, 3, 44100*3)
+    wav.write("ex2.wav", int(10e5), func2(k_nou))
+    plt.show()
+
+def ex2_c_rez():
+    k = np.linspace(0, 15, 3600)
+    plt.plot(k, func3(k))
+    plt.show()
+
+def ex2_d_rez():
+    k = np.linspace(0, 15, 4500)
+    plt.plot(k, func4(k))
+    plt.show()
+
+def ex3():
+    fs = 44100
+    rate, ex2_b = wav.read("ex2_b.wav")
+    sd.play(ex2_b, fs)
+    sd.wait()
+
+def semnal_sinus(t):
+    return 2 * np.sin(400 * np.pi * t + np.pi / 2)
+
+def semnal_saw(t):
+    return t % 3
+
+def ex4():
+    k = np.linspace(0, 6, 600)
+    vect1 = semnal_sinus(k)
+    vect2 = semnal_saw(k)
+    vect_rez = np.add(vect1,vect2)
+
+    plt.plot(k, vect1, color="black")
+    plt.plot(k, vect2, color="red")
+    plt.plot(k, vect_rez, color="blue")
+    plt.show()
+
+def sgn_func5(t,fr):
+    return 5 * np.sin(2 * fr* np.pi * t)
+
+def ex5():
+    k = np.linspace(0, 2, 44100*2)
+    vect1 = sgn_func5(k,260)
+    vect2 = sgn_func5(k,450)
+
+    vect_rez = np.concatenate((vect1,vect2), axis=None)
+    k = np.concatenate((k,k), axis=None)
+
+    sd.play(vect_rez, 44100)
+    sd.wait()
+
+
+def sgn_func6(t,fr):
+    return np.sin(2 * fr * np.pi * t)
+
+def ex6():
+    fr_e = 600/2
+    k = np.linspace(0, 3, 300)
+    plt.plot(k, sgn_func6(k,fr_e))
+    fr_e = 400/4
+    plt.plot(k, sgn_func6(k, fr_e))
+    fr_e = 0
+    plt.plot(k, sgn_func6(k, fr_e))
+
     plt.show()
 
 
+def sgn_func7(t):
+    return 4 * np.sin(2 * 1000 * np.pi * t)
 
+def ex7():
+    k = np.linspace(0,4,800)
+    plt.plot(k, sgn_func7(k))
+    plt.show()
 
+    rez1 = sgn_func7(k)[::4]
+    plt.plot(np.linspace(0,1,len(rez1)),rez1)
+    plt.show()
 
+    rez2 = sgn_func7(k)[1::4]
+    plt.plot(np.linspace(0, 1, len(rez2)), rez2)
+    plt.show()
 
 
 if __name__  ==  '__main__':
-    k = np.linspace(0.0,0.2,10)
-    #ex1(k)
-    #ex2()
+    k = np.linspace(0.0,0.3,200)
+    ex1(k)
+    k = np.linspace(0.0, 0.06, 800)
+    ex2(k)
+    ex3()
+    ex4()
+    ex5()
+    ex6()
+    ex7()
