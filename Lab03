@@ -1,0 +1,85 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def rez_ex1():
+    N = 8
+    n = np.linspace(0, N-1, N)
+
+    cos_vect = np.zeros((N, N), dtype=complex)
+    sin_vect= np.zeros((N, N), dtype=complex)
+
+    for i in n:
+        for k in n:
+            cos_vect[int(m), int(k)] = np.cos(2 * np.pi * i * k / N)
+            sin_vect[int(m), int(k)] = 1j * np.sin(2 * np.pi * i * k / N)
+
+    fig, axs = plt.subplots(8, 2)
+
+    for i in n:
+        axs[int(i), 0].plot(cos_vect[int(i), :].real)
+        axs[int(i), 1].plot(sin_vect[int(i), :].imag)
+    plt.show()
+
+    F = np.zeros((N, N), dtype=np.complex64)
+    for i in range(N):
+        for k in range(N):
+            F[i, k] = np.exp(-2j * np.pi * i * k / N)
+    tr_func_conj = np.conj(F).T
+    p = np.dot(tr_func_conj, F)
+
+    ok = np.allclose(p, N * np.eye(N))
+
+    print("Valoarea afirmatiei Matricea este unitara este ", ok)
+
+
+def sin_sgn(t):
+    return np.sin(2 * 600 * np.pi * t)
+
+
+def rez_ex2():
+    # Fig 1
+    n = np.linspace(0, 1, 120)
+    y = sin_sgn(n)*np.exp(-2j * np.pi * n)
+
+    plt.plot(n, sin_sgn(n))
+    plt.show()
+    plt.plot(y.real, y.imag)
+    plt.show()
+
+    # Fig 2
+    fig, axs = plt.subplots(2, 2)
+    fig.tight_layout(pad=2.0)
+
+    z = sin_sgn(n)*np.exp(-2j * np.pi * n * 2)
+    axs[0, 0].set_title("w=1")
+    axs[0, 0].plot(z.real, z.imag)
+    z = sin_sgn(n) * np.exp(-2j * np.pi * n * 8)
+    axs[0, 1].set_title("w=2")
+    axs[0, 1].plot(z.real, z.imag)
+    z = sin_sgn(n) * np.exp(-2j * np.pi * n * 20)
+    axs[1, 0].set_title("w=7")
+    axs[1, 0].plot(z.real, z.imag)
+    z = sin_sgn(n) * np.exp(-2j * np.pi * n * 600)
+    axs[1, 1].set_title("w=800")
+    axs[1, 1].plot(z.real, z.imag)
+    plt.show()
+
+
+def ex3_sgn(n):
+    # f1=15 f2=30 f3=60
+    return np.cos(2 * np.pi * 15 * n) + 2 * np.cos(2 * np.pi * 30 * n) + 0.5 * np.cos(2 * np.pi * 60 * n)
+
+
+def rez_ex3():
+    n = np.linspace(0,1,120)
+
+    z = ex3_sgn(n) * np.exp(-2j * np.pi * n * 105)
+    plt.plot(n, z)
+    plt.show()
+
+
+if __name__ == "__main__":
+    rez_ex1()
+    rez_ex2()
+    rez_ex3()
