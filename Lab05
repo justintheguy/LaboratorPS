@@ -1,1 +1,59 @@
-i
+from datetime import datetime
+import numpy as np
+import matplotlib.pyplot as plt
+import csv
+import pandas as pd
+
+
+
+    # a
+    # Daca exista cate un esantion din ora in ora(adica in fiecare ora), iar o ora are 3600 de secunde, frecventa de esantionare este de:
+    # 1/3600 = 0.000277
+
+    # b
+    # Asa cum am mentionat si la punctul anterior, exista un esantion pe ora. Cum avem 18288 de esantioane, inseamna ca intervalul de timp acoperit de esantioane este de 
+    # 18288 de ore, adica 18288/ 24 = 762 de zile
+
+    # c
+    # Conform Teoremei de esantionare Nyquist-Shannon, pentru o frecventa de esantionare fs, frecventa maxima prezenta in semnal este fs/2.
+    #Cum in cazul nostru fs = 0.000277 Hz => fmax = 0.000277/2 = 0.000138 Hz
+
+
+    # d  
+def ex1_d():
+    train_data = np.genfromtxt("Train.csv", delimiter=',')
+    nr_masini = train_data['Count']
+    N = len(nr_masini)
+    fr = 0.000277
+    fft = np.fft.fft(nr_masini)
+    fft_abs = np.abs(fft)
+    n = np.fft.fftfreq(N, d=1/fr)
+
+    #Afisare grafica
+    plt.plot(n, fft_abs)
+    plt.xlabel("frecventa")
+    plt.ylabel("trans_Fourier")
+    plt.title("Grafic_1d")
+    plt.show()
+
+
+	# e
+def ex1_e():
+    fr = 0.000277
+    train_data = np.genfromtxt("Train.csv", delimiter=',')
+    t = pd.to_datetime(train_data["Datetime"], format='%d-%m-%Y %H:%M')
+    nr_masini = data['Count']
+    N = len(nr_masini)
+    sgn_mean = nr_masini.mean()
+    print(int(sgn_mean)) #folosim int, deoarece ne intereseaza sa aiba o valoare reala x pt care floor(x) = 0, deci si int(x) = 0
+    if sgn_mean != 0:
+        print("Semnalul are o componenta continua, iar valoarea acesteia este:", sgn_mean)
+        good_sgn = int((nr_masini - sgn_mean).mean()) # se creeaza un nou semnal, fara componenta continua
+        print("Semnalul nou este:", semnal_nou)
+    else:
+        print("Semnalul nu are nicio componenta continuă. :) ")
+
+
+if __name__ == "__main__":
+	#ex1_d()
+	ex1_e()
