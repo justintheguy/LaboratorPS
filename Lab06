@@ -1,0 +1,74 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+
+
+def ex1():
+    x = np.random.rand(100)
+    fig,axs = plt.subplots(3)
+    i1 = np.convolve(x,x)
+    axs[0].plot(i1)
+    i2 = np.convolve(i1,x)
+    axs[1].plot(i2)
+    i3 = np.convolve(i2,x)
+    axs[2].plot(i3)
+    plt.show()
+
+
+
+
+def genereaza_polinoame(N):
+
+    p = np.random.randint(20, size =N +1 )
+    q = np.random.randint(20, size=N + 1)
+
+    polinom_p = np.poly1d(p)
+    polinom_q = np.poly1d(q)
+
+def fereastra_dreptunghiulara(sz):
+    return np.ones(sz)
+
+def fereastra_hanning(sz):
+    return 0.5 - 0.5 * np.cos(2 * np.pi * np.arange(sz) / (sz - 1))
+
+def sinusoida(t):
+    return np.sin(2*np.pi * 100 * t)
+
+
+
+def ex3():
+    k = np.linspace(0, 0.3, 200)
+    fig, axs = plt.subplots(2)
+    fr_hn = fereastra_hanning(200)
+    fr_dr = fereastra_dreptunghiulara(200)
+    axs[0].plot(k, sinusoida(k) * fr_hn)
+    axs[1].plot(k, sinusoida(k) * fr_dr)
+    plt.show()
+
+
+def netezire_semnal(x, w):
+    return np.convolve(x, np.ones(w), 'valid')
+def ex4():
+    #a
+    train_data = np.genfromtxt("Train.csv", delimiter=',', names = True, dtype = None, encoding = None)
+    x= train_data["Count"][:72]
+
+    #b
+
+    w = [5,9,13,17]
+    for i in w:
+        semnal_netezit = netezire_semnal(x,i)
+
+
+
+
+
+
+if __name__  ==  '__main__':
+    ex1()
+    #ex3()
+    #ex4()
+
+
+
