@@ -1,0 +1,45 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def ex1():
+
+    #ex1 a
+
+    N = 1000
+    t = np.arange(N)
+    trend = 0.2 * t**2 + 0.5 * t
+    frecventa_1 = 0.1
+    frecventa_2 = 0.05
+    sezon = 5 * np.sin(2 * np.pi * frecventa_1 * t) + 3 * np.sin(2 * np.pi * frecventa_2 * t)
+    variatii_mici = 0.2 * np.random.randn(N) #folosim  distributia normala standard
+    serie_timp = trend + sezon + variatii_mici
+
+
+    plt.figure(figsize=(12, 6))
+    plt.subplot(4, 1, 1)
+    plt.plot(t, serie_timp, label='Seria de Timp')
+    plt.legend()
+    plt.subplot(4, 1, 2)
+    plt.plot(t, trend, label='Trend')
+    plt.legend()
+    plt.subplot(4, 1, 3)
+    plt.plot(t, sezon, label='Sezon')
+    plt.legend()
+    plt.subplot(4, 1, 4)
+    plt.plot(t, variatii_mici, label='Variatii Mici')
+    plt.legend()
+    plt.show()
+
+#ex1 b
+    autocorrelation = np.correlate(serie_timp, serie_timp, mode='full')
+    autocorrelation /= np.max(autocorrelation) #se realizeaza normalizarea
+    lags = np.arange(-N + 1, N) #se creaza vectorul de lag-uri
+    plt.figure(figsize=(10, 5))
+    plt.stem(lags, autocorrelation, use_line_collection=True)
+    plt.title('Autocorelatie a Seriei de Timp')
+    plt.xlabel('Lag')
+    plt.ylabel('Autocorrrelation')
+    plt.show()
+
+if __name__ == '__main__':
+    ex1()
