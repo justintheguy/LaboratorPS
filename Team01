@@ -1,0 +1,186 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy as scipy
+from scipy import misc, ndimage
+from scipy.fft import dctn, idctn
+import scipy
+#Ex1
+
+from skimage import color as cl
+X = scipy.datasets.ascent()
+plt.imshow(X, cmap=plt.cm.gray)
+plt.show()
+
+
+Q_jpeg = [[16, 11, 10, 16, 24, 40, 51, 61],
+          [12, 12, 14, 19, 26, 28, 60, 55],
+          [14, 13, 16, 24, 40, 57, 69, 56],
+          [14, 17, 22, 29, 51, 87, 80, 62],
+          [18, 22, 37, 56, 68, 109, 103, 77],
+          [24, 35, 55, 64, 81, 104, 113, 92],
+          [49, 64, 78, 87, 103, 121, 120, 101],
+          [72, 92, 95, 98, 112, 100, 103, 99]]
+d1, d2= X.shape   
+x = np.zeros_like(X, dtype = float)
+y = np.zeros_like(X, dtype = float)
+x_jpeg = np.zeros_like(X, dtype = float)
+y_jpeg = np.zeros_like(X, dtype = float)
+
+ 
+# Encoding
+   
+
+for i in range(0, d1, 8):
+    for j in range(0, d2, 8):
+            
+        if i + 8 < d1 and j + 8 < d2:
+            current_block = X[i:i + 8, j:j + 8]  # Extract luminance channel
+            current_block_dctn = dctn(current_block)
+            current_block_dctn_jpeg = Q_jpeg * np.round(current_block_dctn / Q_jpeg)
+            # Decoding
+            current_block_jpeg = idctn(current_block_dctn_jpeg)
+
+            x[i:i + 8, j:j + 8] = current_block
+            y[i:i + 8, j:j + 8] = current_block_dctn
+            x_jpeg[i:i + 8, j:j + 8] = current_block_jpeg
+            y_jpeg[i:i + 8, j:j + 8] = current_block_dctn_jpeg
+         
+             
+
+# Results
+y_nnz = np.count_nonzero(y)
+y_jpeg_nnz = np.count_nonzero(y_jpeg)
+
+plt.subplot(121).imshow(x, cmap=plt.cm.gray)
+plt.title('Original')
+plt.subplot(122).imshow(x_jpeg, cmap=plt.cm.gray)
+plt.title('JPEG')
+plt.show()
+
+print('Componente în frecvență:' + str(y_nnz) + 
+      '\nComponente în frecvență după cuantizare: ' + str(y_jpeg_nnz))
+
+#Ex2
+
+from skimage import color as cl
+X = scipy.misc.face()
+plt.imshow(X, cmap=plt.cm.gray)
+plt.show()
+X_noncolour= cl.rgb2ycbcr(X)
+
+Q_jpeg = [[16, 11, 10, 16, 24, 40, 51, 61],
+          [12, 12, 14, 19, 26, 28, 60, 55],
+          [14, 13, 16, 24, 40, 57, 69, 56],
+          [14, 17, 22, 29, 51, 87, 80, 62],
+          [18, 22, 37, 56, 68, 109, 103, 77],
+          [24, 35, 55, 64, 81, 104, 113, 92],
+          [49, 64, 78, 87, 103, 121, 120, 101],
+          [72, 92, 95, 98, 112, 100, 103, 99]]
+d1, d2, c = X_noncolour.shape
+
+for k in range(c):
+    
+    x = np.zeros_like(X_noncolour, dtype = float)
+    y = np.zeros_like(X_noncolour, dtype = float)
+    x_jpeg = np.zeros_like(X_noncolour, dtype = float)
+    y_jpeg = np.zeros_like(X_noncolour, dtype = float)
+   
+
+ 
+# Encoding
+   
+    for i in range(0, d1, 8):
+        for j in range(0, d2, 8):
+            
+            if i + 8 < d1 and j + 8 < d2:
+                current_block = X_noncolour[i:i + 8, j:j + 8, k]  # Extract luminance channel
+                current_block_dctn = dctn(current_block)
+                current_block_dctn_jpeg = Q_jpeg * np.round(current_block_dctn / Q_jpeg)
+
+            # Decoding
+                current_block_jpeg = idctn(current_block_dctn_jpeg)
+
+                x[i:i + 8, j:j + 8, k] = current_block
+                y[i:i + 8, j:j + 8, k] = current_block_dctn
+                x_jpeg[i:i + 8, j:j + 8, k] = current_block_jpeg
+                y_jpeg[i:i + 8, j:j + 8, k] = current_block_dctn_jpeg
+               
+             
+
+# Results
+y_nnz = np.count_nonzero(y)
+y_jpeg_nnz = np.count_nonzero(y_jpeg)
+
+plt.subplot(121).imshow(x, cmap=plt.cm.gray)
+plt.title('Original')
+plt.subplot(122).imshow(x_jpeg, cmap=plt.cm.gray)
+plt.title('JPEG')
+plt.show()
+
+print('Componente în frecvență:' + str(y_nnz) + 
+      '\nComponente în frecvență după cuantizare: ' + str(y_jpeg_nnz))
+
+#Ex3
+
+
+
+from skimage import color as cl
+X = scipy.datasets.ascent()
+plt.imshow(X, cmap=plt.cm.gray)
+plt.show()
+
+
+Q_jpeg = np.array([[16, 11, 10, 16, 24, 40, 51, 61],
+          [12, 12, 14, 19, 26, 28, 60, 55],
+          [14, 13, 16, 24, 40, 57, 69, 56],
+          [14, 17, 22, 29, 51, 87, 80, 62],
+          [18, 22, 37, 56, 68, 109, 103, 77],
+          [24, 35, 55, 64, 81, 104, 113, 92],
+          [49, 64, 78, 87, 103, 121, 120, 101],
+          [72, 92, 95, 98, 112, 100, 103, 99]])
+d1, d2= X.shape   
+x = np.zeros_like(X, dtype = float)
+y = np.zeros_like(X, dtype = float)
+x_jpeg = np.zeros_like(X, dtype = float)
+y_jpeg = np.zeros_like(X, dtype = float)
+mse = float('inf')
+prag_mse = 100
+fact_cuantizare = 1.6
+ 
+# Encoding
+   
+while mse > prag_mse:
+    sum_mse = 0
+    for i in range(0, d1, 8):
+        for j in range(0, d2, 8):
+            
+            if i + 8 < d1 and j + 8 < d2:
+                current_block = X[i:i + 8, j:j + 8]  # Extract luminance channel
+                current_block_dctn = dctn(current_block)
+                Q_adaptat = Q_jpeg * fact_cuantizare
+                current_block_dctn_jpeg = Q_adaptat * np.round(current_block_dctn / Q_jpeg)
+                # Decoding
+                current_block_jpeg = idctn(current_block_dctn_jpeg)
+
+                x[i:i + 8, j:j + 8] = current_block
+                y[i:i + 8, j:j + 8] = current_block_dctn
+                x_jpeg[i:i + 8, j:j + 8] = current_block_jpeg
+                y_jpeg[i:i + 8, j:j + 8] = current_block_dctn_jpeg
+                sum_mse += np.sum((current_block - current_block_jpeg) ** 2)
+    mse = sum_mse / (d1 * d2)
+    fact_cuantizare = fact_cuantizare - 0.2
+             
+
+# Results
+y_nnz = np.count_nonzero(y)
+y_jpeg_nnz = np.count_nonzero(y_jpeg)
+
+plt.subplot(121).imshow(x, cmap=plt.cm.gray)
+plt.title('Original')
+plt.subplot(122).imshow(x_jpeg, cmap=plt.cm.gray)
+plt.title('JPEG')
+plt.show()
+
+print('Componente în frecvență:' + str(y_nnz) + 
+      '\nComponente în frecvență după cuantizare: ' + str(y_jpeg_nnz))
+
