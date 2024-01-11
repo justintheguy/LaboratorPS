@@ -1,0 +1,59 @@
+import numpy as np
+import scipy as sp
+import statsmodels as sm
+import matplotlib.pyplot as plt
+
+
+def ex1_ex2():
+    #Ex1
+    N = 1000
+    t = np.arange(N)
+    trend = 0.2 * t**2 + 0.5 * t
+    frecventa_1 = 0.1
+    frecventa_2 = 0.05
+    sezon = 5 * np.sin(2 * np.pi * frecventa_1 * t) + 3 * np.sin(2 * np.pi * frecventa_2 * t)
+    variatii_mici = 0.2 * np.random.randn(N) #folosim  distributia normala standard
+    serie_timp = trend + sezon + variatii_mici
+
+
+    plt.figure(figsize=(12, 6))
+    plt.subplot(4, 1, 1)
+    plt.plot(t, serie_timp, label='Seria de Timp')
+    plt.legend()
+    #plt.subplot(4, 1, 2)
+    #plt.plot(t, trend, label='Trend')
+    #plt.legend()
+    #plt.subplot(4, 1, 3)
+    #plt.plot(t, sezon, label='Sezon')
+    #plt.legend()
+    #plt.subplot(4, 1, 4)
+    #plt.plot(t, variatii_mici, label='Variatii Mici')
+    #plt.legend()
+    #plt.show()
+
+    #Ex2
+    alfa_initial = 0.2
+    serie_noua = np.zeros(N)
+    serie_noua[0] = serie_timp[0]
+    for i in range(1, N):
+        serie_noua[i] = alfa_initial * serie_timp[i] + (1 - alfa_initial) * serie_noua[i-1]
+
+
+
+    plt.subplot(4, 1, 2)
+    plt.plot(t, serie_noua, label='Seria de Timp Noua')
+    plt.legend()
+    plt.show()
+
+
+    #Ex3
+
+    epsilon =  np.random.randn(N)
+    q = 20
+    theta = np.random.randn(q)
+    for i in range(q, N):
+        serie_timp[i] += np.sum(theta[i] * epsilon[i - q:i])
+
+
+if __name__ == '__main__' :
+    ex1_ex2()
