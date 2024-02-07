@@ -1,0 +1,37 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+
+def ex1():
+    #unidimensionala
+    medie = 1
+    varianta = 4
+    esantioane = np.random.normal(medie, varianta, 1000)
+    plt.figure(figsize=(10, 6))
+    plt.hist(esantioane, bins = 40, density = true)
+    plt.grid(True)
+    plt.show()
+
+    #bidimensionala
+    medie_bi = [0.5, 0.5]
+    matrice_covalescenta = [[0.5, 1.5], [1.5, 4.5]]
+    esantioane_bi =  np.random.normal(medie_bi, matrice_covalescenta, 1000)
+    plt.figure(figsize=(10, 6))
+    plt.scatter(esantioane_bi[:, 0], esantioane_bi[:, 1], color='blue')
+    plt.grid(True)
+    plt.show()
+
+
+def ex2():
+
+    x = np.linspace(-2, 2, 1500 )
+    medie = np.zeros(len(x))
+    matrice_cov = np.dot(x, x)
+    esantioane = np.random.multivariate_normal(medie, matrice_cov, 20)
+
+    plt.figure(figsize=(10, 6))
+    for i in range(esantioane):
+        plt.plot(x, esantioane[x])
+    plt.grid(True)
+    plt.show()
